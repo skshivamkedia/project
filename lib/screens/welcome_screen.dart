@@ -1,7 +1,9 @@
-import 'package:project/screens/login_screen.dart';
-import 'package:project/screens/registration_screen.dart';
+import 'package:flashchat/screens/login_screen.dart';
+import 'package:flashchat/screens/registration_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:project/buttons.dart';
+import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:flashchat/constants.dart';
+import 'package:flashchat/buttons.dart';
 
 class WelcomeScreen extends StatefulWidget {
   static String id = 'welcomescreen';
@@ -11,27 +13,54 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen>
     with SingleTickerProviderStateMixin {
+  AnimationController controler;
+  Animation animation;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    controler = AnimationController(
+      vsync: this,
+      duration: Duration(seconds: 3),
+    );
+    animation = ColorTween(begin: Colors.blueGrey.shade100, end: Colors.white)
+        .animate(controler);
+    controler.forward();
+    controler.addListener(() {
+      setState(() {});
+      print(animation.value);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.lightBlueAccent,
+      backgroundColor: animation.value,
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: 24.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white,
-              child: Text(
-                "GO",
-                style: TextStyle(
-                  color: Colors.lightBlueAccent,
-                  fontSize: 80,
+            Row(
+              children: <Widget>[
+                Hero(
+                  tag: 'logo',
+                  child: Container(
+                    child: Image.asset('images/logo.png'),
+                    height: 60.0,
+                  ),
                 ),
-              ),
+                AnimatedTextKit(
+                  animatedTexts: [
+                    TypewriterAnimatedText(
+                      'Messenger',
+                      textStyle: kcolorizeTextStyle,
+                    ),
+                  ],
+                  isRepeatingAnimation: true,
+                ),
+              ],
             ),
             // Center(
             //     child: AnimatedTextKit(
@@ -42,14 +71,14 @@ class _WelcomeScreenState extends State<WelcomeScreen>
               height: 48.0,
             ),
             Buttonwidget(
-              buttoncolor: Colors.white,
+              buttoncolor: Colors.grey,
               text: 'Log In',
               onpressed: () {
                 Navigator.pushNamed(context, LoginScreen.id);
               },
             ),
             Buttonwidget(
-              buttoncolor: Colors.lightBlue,
+              buttoncolor: Colors.grey,
               text: 'Register',
               onpressed: () {
                 Navigator.pushNamed(context, RegistrationScreen.id);
