@@ -1,33 +1,46 @@
 import 'package:flutter/material.dart';
-import 'screens/login_screen.dart';
-import 'screens/registration_screen.dart';
-import 'screens/welcome_screen.dart';
-import 'screens/homescreen.dart';
-import 'screens/address.dart';
+import 'package:flashchat/screens/welcome_screen.dart';
+import 'package:flashchat/screens/login_screen.dart';
+import 'package:flashchat/screens/registration_screen.dart';
+import 'package:flashchat/screens/chat_screen.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flashchat/screens/Mainchatscreen.dart';
+import 'package:provider/provider.dart';
+import 'MainProfileList.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flashchat/screens/User Details.dart';
 
-void main() {
-  runApp(MyApp());
+var email;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  email = prefs.getString('email');
+  return runApp(FlashChat());
 }
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class FlashChat extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        theme: ThemeData(
-
-          primarySwatch: Colors.lightBlue,
+    return ChangeNotifierProvider(
+      create: (context) => MainList(),
+      child: MaterialApp(
+        theme: ThemeData.light().copyWith(
+          textTheme: TextTheme(
+            bodyText2: TextStyle(color: Colors.black54),
+          ),
         ),
-        initialRoute: WelcomeScreen.id,
+        initialRoute: email == null ? WelcomeScreen.id : MainChatScreen.id,
         routes: {
           WelcomeScreen.id: (context) => WelcomeScreen(),
           LoginScreen.id: (context) => LoginScreen(),
+          ChatScreen.id: (context) => ChatScreen(),
           RegistrationScreen.id: (context) => RegistrationScreen(),
-          HomeScreen.id: (context) => HomeScreen(),
-          AddressScreen.id: (context) => AddressScreen(),
-          // ChatScreen.id: (context) => ChatScreen(),
-          // MainChatScreen.id: (context) => MainChatScreen(),
-          // UserDetails.id: (context) => UserDetails(),
-        });
+          MainChatScreen.id: (context) => MainChatScreen(),
+          UserDetails.id: (context) => UserDetails(),
+        },
+      ),
+    );
   }
 }

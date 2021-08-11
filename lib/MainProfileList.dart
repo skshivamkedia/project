@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project/screens/homescreen.dart';
-import 'package:project/screens/address.dart';
+import 'package:flashchat/screens/Chatprofiles.dart';
 
 class MainList extends ChangeNotifier {
   String _username;
@@ -31,6 +30,31 @@ class MainList extends ChangeNotifier {
 
   void changeuser(String newuser) {
     _username = newuser;
+    notifyListeners();
+  }
+
+  List<Chatprofiles> _chatprofilelist = [
+    Chatprofiles(
+      name: "Test",
+      email: "786navidulhaque@gmail.com",
+    ),
+  ];
+
+  List<Chatprofiles> get list {
+    return _chatprofilelist;
+  }
+
+  void addtask(String title, String mail) {
+    for (var k in _chatprofilelist) {
+      if (k.email == mail) {
+        return;
+      }
+    }
+
+    _chatprofilelist.add(Chatprofiles(
+      name: title,
+      email: mail,
+    ));
     notifyListeners();
   }
 }
